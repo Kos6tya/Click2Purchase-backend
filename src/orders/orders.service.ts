@@ -13,7 +13,7 @@ export class OrdersService {
     private orderRepository: Repository<Order>,
     @InjectRepository(ProductVariant)
     private variantRepository: Repository<ProductVariant>,
-  ) {}
+  ) { }
 
   async create(createOrderDto: CreateOrderDto, userId?: string) {
     const { items, ...customerData } = createOrderDto;
@@ -58,5 +58,19 @@ export class OrdersService {
     });
 
     return this.orderRepository.save(order);
+  }
+
+
+  async findMyOrders(userId: string) {
+    return this.orderRepository.find({
+      where: { user: { id: userId } },
+      relations: [
+        'items',
+        'items.variant',
+        'items.variant.product',
+        'items.variant.product.images'
+      ],
+      order: { createdAt: 'DESC' }, 
+    });
   }
 }
