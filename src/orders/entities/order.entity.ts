@@ -15,6 +15,9 @@ export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ nullable: true })
+  stripeSessionId: string;
+  
   @Column()
   customerName: string;
 
@@ -44,4 +47,5 @@ export class Order {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
 }
