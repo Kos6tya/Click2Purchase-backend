@@ -5,16 +5,16 @@ export enum UserRole {
   ADMIN = 'admin',
 }
 
-@Entity('users') 
+@Entity('users')
 export class User {
-  @PrimaryGeneratedColumn('uuid') 
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ unique: true })
   email: string;
 
   @Column()
-  passwordHash: string; 
+  passwordHash: string;
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
   role: UserRole;
@@ -24,4 +24,7 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column({ nullable: true })
+  refreshTokenHash: string;
 }
