@@ -8,6 +8,7 @@ import { ProductsModule } from './products/products.module';
 import { SeedModule } from './seed/seed.module';
 import { OrdersModule } from './orders/orders.module';
 import { WishlistModule } from './wishlist/wishlist.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   imports: [
@@ -43,6 +44,8 @@ import { WishlistModule } from './wishlist/wishlist.module';
     OrdersModule,
 
     WishlistModule,
+
+    ReviewsModule,
   ],
 })
 export class AppModule {}
