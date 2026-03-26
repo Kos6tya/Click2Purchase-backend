@@ -3,12 +3,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { GetProductsDto } from './dto/get-products.dto';
+import { Category } from '../categories/entities/category.entity';
+import { CreateProductDto } from './dto/create-product.dto';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
+    @InjectRepository(Category) 
+    private categoryRepository: Repository<Category>, 
   ) {}
 
  async findAll(query: GetProductsDto) {
@@ -80,5 +84,32 @@ export class ProductsService {
     }
 
     return product;
+  }
+
+  async create(createProductDto: CreateProductDto) {
+    const { categoryId, variants, images, ...productData } = createProductDto;
+
+    const category = await this.categoryRepository.findOne({ where: { id: categoryId } });
+    if (!category) {
+      throw new NotFoundException(`Category with ID ${categoryId} not found`);
+    }
+
+    const product = this.productRepository.create({
+      ...productData,
+      category,
+      variants,
+      images,
+    });
+
+    return this.productRepository.save(product);
+  }
+
+  async remove(id: string) {
+    const product = await this.productRepository.findOne({ where: { id } });
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+    
+    return this.productRepository.remove(product);
   }
 }
