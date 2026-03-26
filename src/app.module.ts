@@ -7,6 +7,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { ProductsModule } from './products/products.module';
 import { SeedModule } from './seed/seed.module';
 import { OrdersModule } from './orders/orders.module';
+import { WishlistModule } from './wishlist/wishlist.module';
 
 @Module({
   imports: [
@@ -40,6 +41,8 @@ import { OrdersModule } from './orders/orders.module';
     SeedModule,
 
     OrdersModule,
+
+    WishlistModule,
   ],
 })
 export class AppModule {}
