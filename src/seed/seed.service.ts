@@ -3,21 +3,34 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Category } from '../categories/entities/category.entity';
 import { Product } from '../products/entities/product.entity';
+import * as bcrypt from 'bcrypt';
+import { User, UserRole } from '../users/entities/user.entity';
 
 @Injectable()
 export class SeedService {
   private readonly logger = new Logger(SeedService.name);
 
   constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
-  ) {}
+  ) { }
 
   async runSeed() {
     this.logger.log('Starting database seeding...');
 
+    await this.userRepository.query('TRUNCATE TABLE users CASCADE;');
+    const adminPassword = await bcrypt.hash('admin123', 10);
+    const adminUser = this.userRepository.create({
+      email: 'admin@click2purchase.com',
+      passwordHash: adminPassword,
+      role: UserRole.ADMIN,
+    });
+    
+    await this.userRepository.save(adminUser);
     await this.productRepository.query('TRUNCATE TABLE products CASCADE;');
     await this.categoryRepository.query('TRUNCATE TABLE categories CASCADE;');
 

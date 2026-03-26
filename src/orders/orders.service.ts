@@ -123,4 +123,21 @@ export class OrdersService {
 
     return { received: true };
   }
+
+  async findAllOrders() {
+    return this.orderRepository.find({
+      relations: ['user', 'items', 'items.variant', 'items.variant.product'],
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  async updateOrderStatus(orderId: string, status: OrderStatus) {
+    const order = await this.orderRepository.findOne({ where: { id: orderId } });
+    if (!order) {
+      throw new NotFoundException(`Order with ID ${orderId} not found`);
+    }
+
+    order.status = status;
+    return this.orderRepository.save(order);
+  }
 }
