@@ -11,20 +11,20 @@ export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
-    @InjectRepository(Category) 
-    private categoryRepository: Repository<Category>, 
-  ) {}
+    @InjectRepository(Category)
+    private categoryRepository: Repository<Category>,
+  ) { }
 
- async findAll(query: GetProductsDto) {
-    const { 
-      page = 1, 
-      limit = 12, 
-      search, 
-      category, 
-      minPrice, 
-      maxPrice, 
-      sortBy = 'createdAt', 
-      sortOrder = 'DESC' 
+  async findAll(query: GetProductsDto) {
+    const {
+      page = 1,
+      limit = 12,
+      search,
+      category,
+      minPrice,
+      maxPrice,
+      sortBy = 'createdAt',
+      sortOrder = 'DESC'
     } = query;
 
     const skip = (page - 1) * limit;
@@ -42,7 +42,8 @@ export class ProductsService {
     }
 
     if (category) {
-      qb.andWhere('category.slug = :category', { category });
+      qb.leftJoin('category.parent', 'parentCategory')
+        .andWhere('(category.slug = :category OR parentCategory.slug = :category)', { category });
     }
 
     if (minPrice !== undefined) {
@@ -58,7 +59,7 @@ export class ProductsService {
       qb.orderBy(`product.${sortBy}`, sortOrder as any);
     }
 
-   
+
     qb.skip(skip).take(limit);
 
     const [data, total] = await qb.getManyAndCount();
@@ -109,7 +110,7 @@ export class ProductsService {
     if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
     }
-    
+
     return this.productRepository.remove(product);
   }
 }
