@@ -9,6 +9,9 @@ import { SeedModule } from './seed/seed.module';
 import { OrdersModule } from './orders/orders.module';
 import { WishlistModule } from './wishlist/wishlist.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { UploadController } from './upload/upload.controller';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -46,6 +49,11 @@ import { ReviewsModule } from './reviews/reviews.module';
     WishlistModule,
 
     ReviewsModule,
+
+    CloudinaryModule,
+
+    UploadModule,
   ],
+  controllers: [UploadController],
 })
 export class AppModule {}
