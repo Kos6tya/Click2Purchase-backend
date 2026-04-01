@@ -22,36 +22,32 @@ import { UploadModule } from './upload/upload.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get<string>('DB_HOST'),
-        port: configService.get<number>('DB_PORT'),
-        username: configService.get<string>('DB_USER'),
-        password: configService.get<string>('DB_PASSWORD'),
-        database: configService.get<string>('DB_NAME'),
-        autoLoadEntities: true, 
-        synchronize: true,  // Development only
-      }),
+      useFactory: (configService: ConfigService) => {
+        const isProduction = process.env.NODE_ENV === 'production';
+
+        return {
+          type: 'postgres',
+          host: configService.get<string>('DB_HOST'),
+          port: configService.get<number>('DB_PORT'),
+          username: configService.get<string>('DB_USER'),
+          password: configService.get<string>('DB_PASSWORD'),
+          database: configService.get<string>('DB_NAME'),
+          autoLoadEntities: true, 
+          ssl: isProduction ? { rejectUnauthorized: false } : false,
+          synchronize: true, //Dev only
+        };
+      },
     }),
 
     UsersModule,
-
     AuthModule,
-
     CategoriesModule,
-
     ProductsModule,
-
     SeedModule,
-
     OrdersModule,
-
     WishlistModule,
-
     ReviewsModule,
-
     CloudinaryModule,
-
     UploadModule,
   ],
   controllers: [UploadController],
