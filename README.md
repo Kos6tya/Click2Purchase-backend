@@ -9,6 +9,7 @@
 A robust, enterprise-grade RESTful API built to power the Click2Purchase e-commerce platform. Utilizing a modular architecture, it securely handles everything from user authentication and complex catalog filtering to payment webhooks.
 
 **Swagger API Documentation:** https://click2purchase-api.onrender.com/api/docs
+
 **Frontend Repository:** https://github.com/Kos6tya/Click2Purchase-backend
 
 ## Key Features
