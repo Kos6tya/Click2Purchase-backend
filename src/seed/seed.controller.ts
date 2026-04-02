@@ -1,5 +1,5 @@
-import { Controller, Post } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Controller, Post, Headers, UnauthorizedException } from '@nestjs/common';
+import { ApiOperation, ApiTags, ApiHeader } from '@nestjs/swagger';
 import { SeedService } from './seed.service';
 
 @ApiTags('Database Seed (Dev Only)')
@@ -9,7 +9,16 @@ export class SeedController {
 
   @Post()
   @ApiOperation({ summary: 'Populate database with fake products and categories' })
-  async seedDatabase() {
+  @ApiHeader({
+    name: 'x-seed-key',
+    description: 'Secret key to authorize database seeding',
+    required: true,
+  })
+  async seedDatabase(@Headers('x-seed-key') seedKey: string) {
+    if (seedKey !== process.env.SEED_SECRET) {
+      throw new UnauthorizedException('Invalid or missing seed key');
+    }
+
     return this.seedService.runSeed();
   }
 }
