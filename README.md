@@ -10,7 +10,7 @@ A robust, enterprise-grade RESTful API built to power the Click2Purchase e-comme
 
 **Swagger API Documentation:** https://click2purchase-api.onrender.com/api/docs
 
-**Frontend Repository:** https://github.com/Kos6tya/Click2Purchase-backend
+**Frontend Repository:** https://github.com/Kos6tya/Click2Purchase-frontend
 
 ## Key Features
 
